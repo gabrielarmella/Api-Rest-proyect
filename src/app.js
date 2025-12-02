@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import {connectDB} from "./config/db.js";
-import productsRouter from "./routes/products.router.js";  
+import productsRouter from "./routes/products.router.js";
+import cartRouter from "./routes/cart.router.js";  
 import authRouter from "./routes/auth.router.js";
 import ordersRouter from "./routes/orders.router.js";
 
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 app.use("/api/products", productsRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/orders", ordersRouter);
+app.use("/api/cart", cartRouter);
 
 const PORT = process.env.PORT || 3000;
 

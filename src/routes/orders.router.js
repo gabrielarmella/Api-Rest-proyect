@@ -1,6 +1,7 @@
 import {Router} from 'express';
 import Order from '../models/order.model.js';
 import Product from '../models/product.model.js';
+import Cart from '../models/cart.model.js';
 import {authMiddleware, adminOnly} from '../middlewares/auth.middleware.js';
 
 const router = Router();
@@ -77,6 +78,48 @@ router.get("/", authMiddleware, adminOnly, async (req, res) => {
         res.json({success: true, data: orders});
     } catch (error) {
         res.status(500).json({success: false, message: "Error al obtener las órdenes"});
+    }
+});
+
+// POST /api/orders//checkout - crear orden desde el carrito (usuario autenticado)
+router.post('/checkout', authMiddleware, async (req, res) => {
+    try {
+        const { medioPago, direccionEnvio } = req.body;
+        // Aquí deberías obtener el carrito del usuario
+
+        const cart = await Cart.findOne({ user: req.user.id }).populate("items.product");
+
+        if (!cart || cart.items.length === 0) {
+            return res.status(400).json({ success: false, message: "El carrito está vacío" });
+        }
+        
+        let total = 0;
+        const items = cart.items.map((item) => {
+            const precio = item.product.price;
+            total += precio * item.quantity;
+
+            return {
+                product: item.product._id,
+                quantity: item.quantity,
+                price: precio,
+            };
+        });
+
+        const order = await Order.create({
+            user: req.user.id,
+            items,
+            total,
+            medioPago: medioPago || "mercadoPago",
+            direccionEnvio: direccionEnvio || null,
+        });
+
+        cart.items = [];
+        await cart.save();
+
+        res.status(201).json({ success: true, data: order });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Error al procesar el checkout" });
     }
 });
 
