@@ -1,5 +1,5 @@
 import { Router } from "express";
-import Product from "../models/product.model";
+import Product from "../models/product.model.js";
 
 const router = Router();
 
@@ -31,4 +31,59 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const {name, price, description, stock, category, active} = req.body;
+
+        if (!name || price == null || stock == null) {
+            return res 
+            .status(400)
+            .json({success: false, message: "Faltan campos obligatorios: name, price, stock"});
+        }
+        const newProduct = await Product.create({
+            name,
+            price,
+            description,
+            stock,
+            category,
+        });
+        res.status(201).json({success: true, data: newProduct});
+    } catch (error) {
+        res.status(500).json({success: false, message: "Error al crear el producto"});
+    }
+});
+
+// PUT /api/products/:id - Actualizar un producto 
+router.put("/:id", async (req, res) => {
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {new: true}// Devuelve el documento actualizado
+        );
     
+        if (!updatedProduct) {
+            return res.status(404).json({success: false, message: "Producto no encontrado"});
+        }
+        res.json({success: true, data: updatedProduct});
+    } catch (error) {
+        res.status(400).json({success: false, message: "ID de producto inválido"});
+    }
+});
+
+// DELETE /api/products/:id - Eliminar un producto
+router.delete("/:id", async (req, res) => {
+    try {
+        const deletedProduct = await Product.findByIdAndDelete(
+            req.params.id,
+            {active: false},
+            {new: true}
+        );
+
+        if (!deletedProduct) {
+            return res.status(404).json({success: false, message: "Producto no encontrado"});
+        }
+        res.json({success: true, message: "Producto eliminado correctamente", data: deletedProduct});
+    } catch (error) {
+        res.status(400).json({success: false, message: "ID de producto inválido"});
+    }   
+});
+
+export default router;

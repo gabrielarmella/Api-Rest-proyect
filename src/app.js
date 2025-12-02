@@ -2,7 +2,9 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import {connectDB} from "./config/db.js";
-import productsRouter from "./routes/products.js";  
+import productsRouter from "./routes/products.router.js";  
+import authRouter from "./routes/auth.router.js";
+import ordersRouter from "./routes/orders.router.js";
 
 dotenv.config();
 
@@ -22,10 +24,14 @@ app.get("/", (req, res) => {
 });
 //Rutas
 app.use("/api/products", productsRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/orders", ordersRouter);
+
+const PORT = process.env.PORT || 3000;
 
 //Levanta el servidor
-app.listen(process.env.PORT || 3000, () => {
-    console.log("Servidor iniciado");
+app.listen(PORT, () => {
+    console.log("Servidor iniciado escuchando en ${PORT}");
 });
 
     
