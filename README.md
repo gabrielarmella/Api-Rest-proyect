@@ -1,9 +1,44 @@
 # 🛒 E-commerce API – Node.js, Express & MongoDB
 
-Backend de un e-commerce construido con **Node.js**, **Express** y **MongoDB**, pensado como proyecto de portfolio.  
+Backend de un e-commerce construido con **Node.js**, **Express** y **MongoDB**
 Incluye autenticación con JWT, roles de usuario (**user/admin**), gestión de productos, carrito de compras y órdenes.
 
 ---
+## 🧱 Stack tecnológico
+
+- **Node.js** + **Express**
+- **MongoDB** + **Mongoose**
+- **JWT** para autenticación
+- **bcryptjs** (seguridad)
+- **Swagger** (API docs)
+- **dotenv** para variables de entorno
+- **cors** para permitir el frontend
+- **nodemon** para desarrollo
+
+---
+
+## 📂 Estructura del proyecto
+
+```bash
+src/
+├── app.js
+├── config/
+│   ├── db.js
+│   └── swagger.config.js
+├── models/
+│   ├── user.model.js
+│   ├── product.model.js
+│   ├── cart.model.js
+│   └── order.model.js
+├── routes/
+│   ├── auth.router.js
+│   ├── products.router.js
+│   ├── cart.router.js
+│   ├── orders.router.js
+└── middlewares/
+    ├── auth.middleware.js
+    └── admin.middleware.js
+
 
 ## ✨ Features principales
 
@@ -35,39 +70,14 @@ Incluye autenticación con JWT, roles de usuario (**user/admin**), gestión de p
   - Órdenes del usuario logueado
   - Listado de todas las órdenes (solo admin)
 
+📚 **Documentación con Swagger**
+
+  - Documentación generada automáticamente usando:
+
+  - swagger-jsdoc
+
+  - swagger-ui-express
 ---
-
-## 🧱 Stack tecnológico
-
-- **Node.js** + **Express**
-- **MongoDB** + **Mongoose**
-- **JWT** para autenticación
-- **bcryptjs** para hash de contraseñas
-- **dotenv** para variables de entorno
-- **cors** para manejo de CORS
-- **nodemon** para desarrollo
-
----
-
-## 📂 Estructura del proyecto
-
-```bash
-src/
-├── app.js
-├── config/
-│   └── db.js
-├── models/
-│   ├── user.model.js
-│   ├── product.model.js
-│   ├── cart.model.js
-│   └── order.model.js
-├── routes/
-│   ├── auth.router.js
-│   ├── products.router.js
-│   ├── cart.router.js
-│   └── orders.router.js
-└── middlewares/
-    └── auth.middleware.js
 
 
 
@@ -89,36 +99,42 @@ PORT=3000
 MONGO_URI=mongodb://localhost:27017/ecommerce_portfolio
 JWT_SECRET=un_secreto_bien_largo_y_seguro
 
-###4. Ejecutar en desarrollo
+### 4. Ejecutar en desarrollo
 
 npm run dev
 
-###Servidor disponible en:
+### Servidor disponible en:
 
 http://localhost:3000
 
+### Documentación Swagger:
+
+http://localhost:3000/api-docs
+
 ## 📌 Endpoints principales
 
-### Auth
+### 🔐 Auth
 - `POST /api/auth/register`
 - `POST /api/auth/login`
 - `GET /api/auth/me`
 
-### Productos
-- `GET /api/products` (público, con filtros y paginación)
+### 📦 Productos
+- `GET /api/products` 
+    Query params: search, category, minPrice, maxPrice, page, limit, sort
 - `GET /api/products/:id`
 - `POST /api/products` (admin)
 - `PUT /api/products/:id` (admin)
 - `DELETE /api/products/:id` (admin)
 
-### Carrito
+### 🛒 Carrito
 - `GET /api/cart`
 - `POST /api/cart/add`
 - `PUT /api/cart/item/:productId`
 - `DELETE /api/cart/item/:productId`
 - `POST /api/cart/clear`
 
-### Órdenes
+### 📑 Órdenes
 - `POST /api/orders/checkout`
 - `GET /api/orders/my`
 - `GET /api/orders` (admin)
+
