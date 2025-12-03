@@ -4,8 +4,46 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Operaciones de autenticación de usuarios
+ */
 const router = Router();
 
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Registrar un nuevo usuario
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Gabriel
+ *               email:
+ *                 type: string
+ *                 example: gabo@example.com
+ *               password:
+ *                 type: string
+ *                 example: 123456
+ *     responses:
+ *       201:
+ *         description: Usuario creado correctamente
+ *       400:
+ *         description: Datos inválidos o usuario ya existe
+ */
 // POST /api/auth/register - Registrar un nuevo usuario
 router.post("/register", async (req, res) => {
     try {
@@ -50,6 +88,34 @@ router.post("/register", async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Iniciar sesión
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: gabo@example.com
+ *               password:
+ *                 type: string
+ *                 example: 123456
+ *     responses:
+ *       200:
+ *         description: Login exitoso, devuelve token JWT
+ *       400:
+ *         description: Credenciales inválidas
+ */
 // POST /api/auth/login - Iniciar sesión de usuario
 router.post("/login", async (req, res) => {
     try {

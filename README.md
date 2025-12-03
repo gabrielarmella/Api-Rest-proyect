@@ -68,3 +68,57 @@ src/
 │   └── orders.router.js
 └── middlewares/
     └── auth.middleware.js
+
+
+
+## ⚙️ Instalación y configuración
+
+### 1. Clonar repositorio
+
+```bash
+git clone https://github.com/gabrielarmella/Api-Rest-proyect.git
+cd Api-Rest-proyect
+
+### 2. Instalar dependencias
+
+npm install
+
+### 3. Crear archivo .env en la raíz
+
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/ecommerce_portfolio
+JWT_SECRET=un_secreto_bien_largo_y_seguro
+
+###4. Ejecutar en desarrollo
+
+npm run dev
+
+###Servidor disponible en:
+
+http://localhost:3000
+
+## 📌 Endpoints principales
+
+### Auth
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
+
+### Productos
+- `GET /api/products` (público, con filtros y paginación)
+- `GET /api/products/:id`
+- `POST /api/products` (admin)
+- `PUT /api/products/:id` (admin)
+- `DELETE /api/products/:id` (admin)
+
+### Carrito
+- `GET /api/cart`
+- `POST /api/cart/add`
+- `PUT /api/cart/item/:productId`
+- `DELETE /api/cart/item/:productId`
+- `POST /api/cart/clear`
+
+### Órdenes
+- `POST /api/orders/checkout`
+- `GET /api/orders/my`
+- `GET /api/orders` (admin)

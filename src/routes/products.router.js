@@ -3,6 +3,13 @@ import Product from "../models/product.model.js";
 import { authMiddleware, adminOnly } from "../middlewares/auth.middleware.js";
 
 const router = Router();
+/**
+ * @swagger
+ * tags:
+ *   name: Products
+ *   description: Gestión de productos del e-commerce
+ */
+
 
 // GET /api/products - Obtener todos los productos
 router.get("/", async (req, res) => {
@@ -13,6 +20,7 @@ router.get("/", async (req, res) => {
         res.status(500).json({success: false, message: "Error al obtener los productos"});
     };
     });
+
 
     // GET /api/products/:id - Obtener un producto por ID
 router.get("/:id", async (req, res) => {
@@ -27,6 +35,49 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/products:
+ *   get:
+ *     summary: Obtener lista de productos
+ *     tags: [Products]
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Texto para buscar en nombre, descripción o tags
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filtrar por categoría
+ *       - in: query
+ *         name: minPrice
+ *         schema:
+ *           type: number
+ *         description: Precio mínimo
+ *       - in: query
+ *         name: maxPrice
+ *         schema:
+ *           type: number
+ *         description: Precio máximo
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Número de página
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Cantidad de items por página
+ *     responses:
+ *       200:
+ *         description: Lista de productos
+ */
 //GET sin authentication
 router.get("/", async (req, res) => {
     try {
@@ -90,6 +141,47 @@ router.get("/", async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/products:
+ *   post:
+ *     summary: Crear un nuevo producto
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - price
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Cámara IP Hikvision
+ *               price:
+ *                 type: number
+ *                 example: 120
+ *               description:
+ *                 type: string
+ *                 example: Cámara IP 1080p para exteriores
+ *               stock:
+ *                 type: integer
+ *                 example: 10
+ *               category:
+ *                 type: string
+ *                 example: seguridad
+ *     responses:
+ *       201:
+ *         description: Producto creado
+ *       401:
+ *         description: No autorizado (token faltante o inválido)
+ *       403:
+ *         description: Solo administradores pueden crear productos
+ */
 //POST /api/products - Solo admin
 router.post("/", authMiddleware, adminOnly, async (req, res) => {
     try {
